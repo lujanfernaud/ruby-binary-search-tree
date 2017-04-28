@@ -20,6 +20,7 @@ class Node
     if value > self.value
 
       if right.nil?
+        puts "Adding #{value} to the right of #{self.value}"
         self.right = Node.new(value: value)
       else
         right.insert(value)
@@ -28,6 +29,7 @@ class Node
     elsif value < self.value
 
       if left.nil?
+        puts "Adding #{value} to the left of #{self.value}"
         self.left = Node.new(value: value)
       else
         left.insert(value)
@@ -46,6 +48,7 @@ class Tree
 
   def build(array)
     @root.value = array[(array.length / 2).round]
+    puts "Root value: #{@root.value}"
 
     array.each do |value|
       @root.insert(value)
@@ -57,6 +60,3 @@ data = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
 tree = Tree.new
 tree.build(data)
-tree.root
-
-p tree
