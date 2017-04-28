@@ -1,9 +1,10 @@
 class Node
-  attr_accessor :value, :parent, :children
+  attr_accessor :value, :parent, :left, :right
 
   def initialize(*args)
-    @value    = args[:value]
-    @parent   = args[:parent]
-    @children = args[:children]
+    @value  = args[:value]
+    @parent = args[:parent]
+    @left   = args[:left]
+    @right  = args[:right]
   end
 end
