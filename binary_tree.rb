@@ -37,6 +37,23 @@ class Node
 
     end
   end
+
+  def breadth_first_search(value)
+    return self if self.value == value
+
+    queue = []
+    queue << left if left
+    queue << right if right
+
+    queue.each do |node|
+      queue << node.left if node.left
+      puts "Adding #{node.left.value}" if node.left
+      queue << node.right if node.right
+      puts "Adding #{node.right.value}" if node.right
+    end
+
+    queue.select { |node| node.value == value ? node : nil }.shift
+  end
 end
 
 class Tree
@@ -54,9 +71,14 @@ class Tree
       @root.insert(value)
     end
   end
+
+  def breadth_first_search(value)
+    @root.breadth_first_search(value) unless @root.value.nil?
+  end
 end
 
 data = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
 tree = Tree.new
 tree.build(data)
+p tree.breadth_first_search(67)
