@@ -38,7 +38,9 @@ class Node
   end
 
   def breadth_first_search(value)
-    return self if self.value == value
+    return self  if self.value  == value
+    return left  if left.value  == value
+    return right if right.value == value
 
     queue = []
     queue << left if left
@@ -47,10 +49,13 @@ class Node
     puts "Adding #{right.value}" if right
 
     queue.each do |node|
-      queue << node.left if node.left
-      puts "Adding #{node.left.value}" if node.left
-      queue << node.right if node.right
-      puts "Adding #{node.right.value}" if node.right
+      if node.left
+        queue << node.left
+        puts "Adding #{node.left.value}"
+      elsif node.right
+        queue << node.right
+        puts "Adding #{node.right.value}"
+      end
     end
 
     queue.select { |node| node.value == value ? node : nil }.shift
