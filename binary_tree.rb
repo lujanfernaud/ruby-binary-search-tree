@@ -14,7 +14,7 @@ class Node
   end
 
   def insert(value)
-    return false if value == self.value
+    return false if self.value == value
 
     if value > self.value
 
@@ -33,7 +33,6 @@ class Node
       else
         left.insert(value)
       end
-
     end
   end
 
