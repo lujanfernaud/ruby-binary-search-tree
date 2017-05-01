@@ -66,12 +66,15 @@ class Node
       if node.left
         queue << node.left
         puts "Adding #{node.left.value}"
+
       elsif node.right
         queue << node.right
         puts "Adding #{node.right.value}"
+
       elsif queue[-2].right == node
         puts "Jumping back and adding #{queue[-3].right.value}"
         queue << queue[-3].right
+
       elsif queue[-2].right
         puts "Jumping back and adding #{queue[-2].right.value}"
         queue << queue[-2].right
