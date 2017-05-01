@@ -80,6 +80,25 @@ class Node
 
     queue.select { |node| node.value == value ? node : nil }.shift
   end
+
+  def dfs_recursive(node, value)
+    return node if node.value == value
+    puts "Node value: #{node.value}"
+
+    if value < node.value && node.left
+      puts "Left value: #{node.left.value}"
+      return node.left if node.left.value == value
+      dfs_recursive(node.left, value)
+
+    elsif value > node.value && node.right
+      puts "Right value: #{node.right.value}"
+      return node.right if node.right.value == value
+      dfs_recursive(node.right, value)
+
+    else
+      return nil
+    end
+  end
 end
 
 class Tree
@@ -91,7 +110,7 @@ class Tree
 
   def build(array)
     @root.value = array[(array.length / 2).round]
-    puts "Root value: #{@root.value}"
+    puts "Root value: #{@root.value}\n\n"
 
     array.each do |value|
       @root.insert(value)
@@ -103,25 +122,54 @@ class Tree
   end
 
   def depth_first_search(value)
-    @root.depth_first_search(self.root, value) unless @root.value.nil?
+    @root.depth_first_search(root, value) unless @root.value.nil?
+  end
+
+  def dfs_recursive(value)
+    @root.dfs_recursive(root, value) unless @root.value.nil?
   end
 end
 
-data = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
+data1 = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
+data2 = [86, 32, 20, 18, 90, 52, 37, 66, 88, 26, 58, 94, 5, 54, 15, 89, 90, 34]
 
-tree = Tree.new
+tree1 = Tree.new
+tree2 = Tree.new
 
 puts "\n----------"
 puts "Build tree"
 puts "----------\n"
-tree.build(data)
+tree1.build(data1)
 
 puts "\n--------------------------------------"
 puts "Breadth First Search (adding to queue)"
 puts "--------------------------------------\n"
-p tree.breadth_first_search(67)
+value = data1.sample
+puts "Value to find: #{value}\n\n"
+p tree1.breadth_first_search(value)
 
-puts "\n----------------------------------"
+puts "\n------------------------------------"
 puts "Depth First Search (adding to queue)"
-puts "----------------------------------\n"
-p tree.depth_first_search(67)
+puts "------------------------------------\n"
+value = data1.sample
+puts "Value to find: #{value}\n\n"
+p tree1.depth_first_search(value)
+
+puts "\n------------------------------"
+puts "Depth First Search (recursive)"
+puts "------------------------------\n"
+value = data1.sample
+puts "Value to find: #{value}\n\n"
+p tree1.dfs_recursive(value)
+
+puts "\n-----------------"
+puts "Build bigger tree"
+puts "-----------------\n"
+tree2.build(data2)
+
+puts "\n------------------------------"
+puts "Depth First Search (recursive)"
+puts "------------------------------\n"
+value = data2.sample
+puts "Value to find: #{value}\n\n"
+p tree2.dfs_recursive(value)
