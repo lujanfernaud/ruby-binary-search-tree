@@ -1,13 +1,12 @@
 require "pry"
 
 class Node
-  attr_accessor :value, :parent, :left, :right
+  attr_accessor :value, :left, :right
 
   def initialize(args = default)
-    @value  = args[:value]
-    @parent = args[:parent]
-    @left   = args[:left]
-    @right  = args[:right]
+    @value = args[:value]
+    @left  = args[:left]
+    @right = args[:right]
   end
 
   def default
