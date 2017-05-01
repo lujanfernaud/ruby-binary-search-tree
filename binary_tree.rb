@@ -49,20 +49,19 @@ class Node
     puts "Adding #{right.value}" if right
 
     queue.each do |node|
-      if node.left
-        queue << node.left
-        puts "Adding #{node.left.value}"
-      elsif node.right
-        queue << node.right
-        puts "Adding #{node.right.value}"
-      end
+      queue << node.left if node.left
+      puts "Adding #{node.left.value}" if node.left
+      queue << node.right if node.right
+      puts "Adding #{node.right.value}" if node.right
     end
 
     queue.select { |node| node.value == value ? node : nil }.shift
   end
 
   def depth_first_search(root, value)
-    return self if self.value == value
+    return self  if self.value  == value
+    return left  if left.value  == value
+    return right if right.value == value
 
     queue = []
     queue << root
