@@ -3,14 +3,10 @@ require "pry"
 class Node
   attr_accessor :value, :left, :right
 
-  def initialize(args = default)
-    @value = args[:value]
-    @left  = args[:left]
-    @right = args[:right]
-  end
-
-  def default
-    { value: nil, parent: nil, left: nil, right: nil }
+  def initialize(value = nil)
+    @value = value
+    @left  = nil
+    @right = nil
   end
 
   def insert(value)
@@ -20,7 +16,7 @@ class Node
 
       if right.nil?
         puts "Adding #{value} to the right of #{self.value}"
-        self.right = Node.new(value: value)
+        self.right = Node.new(value)
       else
         right.insert(value)
       end
@@ -29,7 +25,7 @@ class Node
 
       if left.nil?
         puts "Adding #{value} to the left of #{self.value}"
-        self.left = Node.new(value: value)
+        self.left = Node.new(value)
       else
         left.insert(value)
       end
