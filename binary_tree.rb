@@ -14,8 +14,8 @@ class Node
   def initialize(value = nil)
     @value  = value
     @parent = nil
-    @left   = left
-    @right  = right
+    @left   = nil
+    @right  = nil
   end
 
   def insert(value)
@@ -24,6 +24,22 @@ class Node
     case @value <=> value
     when  1 then insert_left(value)
     when -1 then insert_right(value)
+    end
+  end
+
+  def breadth_first_search(value)
+    return self   if @value == value
+    return @left  if @left.value == value
+    return @right if @right.value == value
+
+    queue = []
+    queue << @left << @right
+
+    queue.each do |node|
+      return node.left  if node.left && node.left.value == value
+      return node.right if node.right && node.right.value == value
+      queue << node.left if node.left
+      queue << node.right if node.right
     end
   end
 
@@ -62,21 +78,31 @@ class Tree
     array.sorted? ? build_from_sorted(array) : build_from_unsorted(array)
   end
 
+  def breadth_first_search(value)
+    @root.breadth_first_search(value)
+  end
+
+  private
+
   def build_from_sorted(array, node = @root)
-    return if array.size.zero?
+    return if array.empty?
 
     mid = array.size / 2
     node.value  = array[mid]
     left_array  = array[0...mid]
     right_array = array[mid + 1..-1]
 
-    node.left  = Node.new(left_array.pop)
-    node.right = Node.new(right_array.shift)
-    node.left.parent  = node
-    node.right.parent = node
+    unless left_array.empty?
+      node.left = Node.new(left_array[left_array.size / 2])
+      node.left.parent = node
+      build_from_sorted(left_array, node.left)
+    end
 
-    build(left_array, node.left)
-    build(right_array, node.right)
+    unless right_array.empty?
+      node.right = Node.new(right_array[right_array.size / 2])
+      node.right.parent = node
+      build_from_sorted(right_array, node.right)
+    end
 
     @root
   end
@@ -89,7 +115,7 @@ class Tree
   end
 end
 
-data1 = [1, 2, 3, 4, 5, 6, 7, 8, 9].shuffle
+data1 = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 tree1 = Tree.new
 
@@ -98,3 +124,9 @@ puts "Build tree:"
 puts "#{data1}"
 puts "-----------\n"
 p tree1.build(data1)
+
+puts "\n-----------"
+puts "Breadth First Search (using queue):"
+puts "#{data1}"
+puts "-----------\n"
+p tree1.breadth_first_search(6)
