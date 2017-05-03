@@ -11,7 +11,7 @@ class Node
   end
 
   def inspect
-    "{v:#{value} l:#{left.inspect} | r:#{right.inspect}}"
+    "{#{value} #{value}L:#{left.inspect} | #{value}R:#{right.inspect}}"
   end
 end
 
