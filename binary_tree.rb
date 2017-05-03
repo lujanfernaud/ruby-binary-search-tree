@@ -9,6 +9,10 @@ class Node
     @left   = left
     @right  = right
   end
+
+  def inspect
+    "{v:#{value} l:#{left.inspect} | r:#{right.inspect}}"
+  end
 end
 
 class Tree
