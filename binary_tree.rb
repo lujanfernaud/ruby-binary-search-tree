@@ -18,8 +18,33 @@ class Node
     @right  = right
   end
 
+  def insert(value)
+    return if @value == value
+
+    case @value <=> value
+    when  1 then insert_left(value)
+    when -1 then insert_right(value)
+    end
+  end
+
   def inspect
     "{#{value} #{value}L:#{left.inspect} | #{value}R:#{right.inspect}}"
+  end
+
+  private
+
+  def insert_left(value)
+    return @left.insert(value) unless left.nil?
+
+    @left = Node.new(value)
+    @left.parent = self
+  end
+
+  def insert_right(value)
+    return @right.insert(value) unless right.nil?
+
+    @right = Node.new(value)
+    @right.parent = self
   end
 end
 
@@ -57,7 +82,10 @@ class Tree
   end
 
   def build_from_unsorted(array)
-    #
+    @root.value = array.shift
+    array.each { |n| @root.insert(n) }
+
+    @root
   end
 end
 
@@ -69,4 +97,4 @@ puts "\n-----------"
 puts "Build tree:"
 puts "#{data1}"
 puts "-----------\n"
-tree1.build(data1)
+p tree1.build(data1)
