@@ -43,6 +43,28 @@ class Node
     end
   end
 
+  def depth_first_search(value, root)
+    return self if @value == value
+
+    stack   = [root]
+    visited = []
+
+    # Using preorder traversal.
+    until stack.empty?
+      node = stack.pop
+      return node if node.value == value
+      visited << node
+
+      stack << if node.left && !visited.include?(node.left)
+                 node.left
+               elsif node.right && !visited.include?(node.right)
+                 node.right
+               else
+                 node.parent
+               end
+    end
+  end
+
   def inspect
     "{#{value} #{value}L:#{left.inspect} | #{value}R:#{right.inspect}}"
   end
@@ -80,6 +102,10 @@ class Tree
 
   def breadth_first_search(value)
     @root.breadth_first_search(value)
+  end
+
+  def depth_first_search(value)
+    @root.depth_first_search(value, @root)
   end
 
   private
@@ -130,3 +156,9 @@ puts "Breadth First Search (using queue):"
 puts "#{data1}"
 puts "-----------\n"
 p tree1.breadth_first_search(6)
+
+puts "\n-----------"
+puts "Depth First Search (using stack):"
+puts "#{data1}"
+puts "-----------\n"
+p tree1.depth_first_search(3)
