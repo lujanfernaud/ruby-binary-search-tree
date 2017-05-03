@@ -1,5 +1,13 @@
 require "pry"
 
+module SortChecker
+  refine Array do
+    def sorted?
+      self == self.sort
+    end
+  end
+end
+
 class Node
   attr_accessor :value, :parent, :left, :right
 
@@ -16,6 +24,8 @@ class Node
 end
 
 class Tree
+  using SortChecker
+
   attr_accessor :root
 
   def initialize
@@ -23,8 +33,11 @@ class Tree
   end
 
   # Take an array of data and turn it into a binary tree.
-  # Note: Currently assuming the array is sorted.
-  def build(array, node = @root)
+  def build(array)
+    array.sorted? ? build_from_sorted(array) : build_from_unsorted(array)
+  end
+
+  def build_from_sorted(array, node = @root)
     return if array.size.zero?
 
     mid = array.size / 2
@@ -40,11 +53,15 @@ class Tree
     build(left_array, node.left)
     build(right_array, node.right)
 
-    p @root
+    @root
+  end
+
+  def build_from_unsorted(array)
+    #
   end
 end
 
-data1 = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+data1 = [1, 2, 3, 4, 5, 6, 7, 8, 9].shuffle
 
 tree1 = Tree.new
 
