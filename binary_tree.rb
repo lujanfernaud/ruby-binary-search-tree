@@ -1,13 +1,5 @@
 require "pry"
 
-module SortChecker
-  refine Array do
-    def sorted?
-      self == self.sort
-    end
-  end
-end
-
 class Node
   attr_accessor :value, :parent, :left, :right
 
@@ -97,8 +89,6 @@ class Node
 end
 
 class Tree
-  using SortChecker
-
   attr_accessor :root
 
   def initialize
@@ -107,7 +97,7 @@ class Tree
 
   # Take an array of data and turn it into a binary tree.
   def build(array)
-    array.sorted? ? build_from_sorted(array) : build_from_unsorted(array)
+    array == array.sort ? build_from_sorted(array) : build_from_unsorted(array)
   end
 
   def breadth_first_search(value)
