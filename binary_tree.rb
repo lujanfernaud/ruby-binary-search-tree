@@ -1,105 +1,84 @@
-require "pry"
-
 class Node
-  attr_accessor :value, :left, :right
+  attr_accessor :value, :parent, :left, :right
 
   def initialize(value = nil)
     @value = value
-    @left  = nil
-    @right = nil
   end
 
   def insert(value)
-    return false if self.value == value
+    return if @value == value
 
-    if value > self.value
-
-      if right.nil?
-        puts "Adding #{value} to the right of #{self.value}"
-        self.right = Node.new(value)
-      else
-        right.insert(value)
-      end
-
-    elsif value < self.value
-
-      if left.nil?
-        puts "Adding #{value} to the left of #{self.value}"
-        self.left = Node.new(value)
-      else
-        left.insert(value)
-      end
+    case @value <=> value
+    when  1 then insert_left(value)
+    when -1 then insert_right(value)
     end
   end
 
   def breadth_first_search(value)
-    return self  if self.value  == value
-    return left  if left.value  == value
-    return right if right.value == value
+    return self if @value == value
 
     queue = []
-    queue << left if left
-    puts "Adding #{left.value}" if left
-    queue << right if right
-    puts "Adding #{right.value}" if right
+    queue << @left  if @left
+    queue << @right if @right
 
-    queue.each do |node|
+    until queue.empty?
+      node = queue.shift
+      return node if node.value == value
+
       queue << node.left if node.left
-      puts "Adding #{node.left.value}" if node.left
       queue << node.right if node.right
-      puts "Adding #{node.right.value}" if node.right
     end
-
-    queue.select { |node| node.value == value ? node : nil }.shift
   end
 
-  def depth_first_search(root, value)
-    return self  if self.value  == value
-    return left  if left.value  == value
-    return right if right.value == value
+  def depth_first_search(value)
+    return self if @value == value
 
-    queue = []
-    queue << root
+    stack   = [self]
+    visited = []
 
-    queue.each do |node|
-      if node.left
-        queue << node.left
-        puts "Adding #{node.left.value}"
+    until stack.empty?
+      node = stack.pop
+      return node if node.value == value
+      visited << node
 
-      elsif node.right
-        queue << node.right
-        puts "Adding #{node.right.value}"
-
-      elsif queue[-2].right == node
-        puts "Jumping back and adding #{queue[-3].right.value}"
-        queue << queue[-3].right
-
-      elsif queue[-2].right
-        puts "Jumping back and adding #{queue[-2].right.value}"
-        queue << queue[-2].right
-      end
+      stack << if node.left && !visited.include?(node.left)
+                 node.left
+               elsif node.right && !visited.include?(node.right)
+                 node.right
+               else
+                 node.parent
+               end
     end
-
-    queue.select { |node| node.value == value ? node : nil }.shift
   end
 
-  def dfs_recursive(node, value)
+  def dfs_recursive(value, node)
     return node if node.value == value
-    puts "Node value: #{node.value}"
 
     if value < node.value && node.left
-      puts "Left value: #{node.left.value}"
-      return node.left if node.left.value == value
-      dfs_recursive(node.left, value)
-
+      dfs_recursive(value, node.left)
     elsif value > node.value && node.right
-      puts "Right value: #{node.right.value}"
-      return node.right if node.right.value == value
-      dfs_recursive(node.right, value)
-
-    else
-      return nil
+      dfs_recursive(value, node.right)
     end
+  end
+
+  def inspect
+    "{#{value} #{value}L:#{left.inspect} | #{value}R:#{right.inspect}}"
+  end
+
+  private
+
+  def insert_left(value)
+    return @left.insert(value) unless left.nil?
+
+    @left = Node.new(value)
+    @left.parent = self
+  end
+
+  def insert_right(value)
+    return @right.insert(value) unless right.nil?
+
+    @right = Node.new(value)
+    @right.parent = self
   end
 end
 
@@ -111,24 +90,61 @@ class Tree
   end
 
   def build(array)
-    @root.value = array[(array.length / 2).round]
-    puts "Root value: #{@root.value}\n\n"
-
-    array.each do |value|
-      @root.insert(value)
+    if array == array.sort
+      build_from_sorted(array.uniq)
+    else
+      build_from_unsorted(array)
     end
   end
 
   def breadth_first_search(value)
-    @root.breadth_first_search(value) unless @root.value.nil?
+    @root.breadth_first_search(value)
   end
 
   def depth_first_search(value)
-    @root.depth_first_search(root, value) unless @root.value.nil?
+    @root.depth_first_search(value)
   end
 
   def dfs_recursive(value)
-    @root.dfs_recursive(root, value) unless @root.value.nil?
+    @root.dfs_recursive(value, @root)
+  end
+
+  private
+
+  def build_from_sorted(array, node = @root)
+    return if array.empty?
+
+    mid = array.size / 2
+    node.value  = array[mid]
+    left_array  = array[0...mid]
+    right_array = array[mid + 1..-1]
+
+    build_left(left_array, node)
+    build_right(right_array, node)
+
+    @root
+  end
+
+  def build_left(array, node)
+    return if array.empty?
+
+    node.left = Node.new(array[array.size / 2])
+    node.left.parent = node
+    build_from_sorted(array, node.left)
+  end
+
+  def build_right(array, node)
+    return if array.empty?
+
+    node.right = Node.new(array[array.size / 2])
+    node.right.parent = node
+    build_from_sorted(array, node.right)
+  end
+
+  def build_from_unsorted(array)
+    @root.value = array.shift
+    array.each { |n| @root.insert(n) }
+    @root
   end
 end
 
@@ -138,10 +154,17 @@ data2 = [86, 32, 20, 18, 90, 52, 37, 66, 88, 26, 58, 94, 5, 54, 15, 89, 90, 34]
 tree1 = Tree.new
 tree2 = Tree.new
 
-puts "\n----------"
-puts "Build tree"
-puts "----------\n"
-tree1.build(data1)
+puts "\n---------------------"
+puts "Build tree (unsorted)"
+puts "---------------------\n"
+puts "Array: #{data1}\n\n"
+p tree1.build(data1)
+
+puts "\n-------------------"
+puts "Build tree (sorted)"
+puts "-------------------\n"
+puts "Array: #{data1.sort}\n\n"
+p tree1.build(data1.sort)
 
 puts "\n--------------------------------------"
 puts "Breadth First Search (adding to queue)"
@@ -167,7 +190,8 @@ p tree1.dfs_recursive(value)
 puts "\n-----------------"
 puts "Build bigger tree"
 puts "-----------------\n"
-tree2.build(data2)
+puts "Array: #{data2}\n\n"
+p tree2.build(data2)
 
 puts "\n------------------------------"
 puts "Depth First Search (recursive)"
