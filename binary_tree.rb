@@ -43,10 +43,10 @@ class Node
     end
   end
 
-  def depth_first_search(value, root)
+  def depth_first_search(value)
     return self if @value == value
 
-    stack   = [root]
+    stack   = [self]
     visited = []
 
     # Using preorder traversal.
@@ -62,6 +62,16 @@ class Node
                else
                  node.parent
                end
+    end
+  end
+
+  def dfs_recursive(value, node)
+    return node if node.value == value
+
+    if value < node.value && node.left
+      dfs_recursive(value, node.left)
+    elsif value > node.value && node.right
+      dfs_recursive(value, node.right)
     end
   end
 
@@ -105,7 +115,11 @@ class Tree
   end
 
   def depth_first_search(value)
-    @root.depth_first_search(value, @root)
+    @root.depth_first_search(value)
+  end
+
+  def dfs_recursive(value)
+    @root.dfs_recursive(value, @root)
   end
 
   private
@@ -162,3 +176,9 @@ puts "Depth First Search (using stack):"
 puts "#{data1}"
 puts "-----------\n"
 p tree1.depth_first_search(3)
+
+puts "\n-----------"
+puts "Depth First Search (recursive):"
+puts "#{data1}"
+puts "-----------\n"
+p tree1.dfs_recursive(6)
