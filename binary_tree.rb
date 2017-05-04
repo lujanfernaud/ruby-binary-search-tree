@@ -132,25 +132,31 @@ class Tree
     left_array  = array[0...mid]
     right_array = array[mid + 1..-1]
 
-    unless left_array.empty?
-      node.left = Node.new(left_array[left_array.size / 2])
-      node.left.parent = node
-      build_from_sorted(left_array, node.left)
-    end
-
-    unless right_array.empty?
-      node.right = Node.new(right_array[right_array.size / 2])
-      node.right.parent = node
-      build_from_sorted(right_array, node.right)
-    end
+    build_left(left_array, node)
+    build_right(right_array, node)
 
     @root
+  end
+
+  def build_left(array, node)
+    return if array.empty?
+
+    node.left = Node.new(array[array.size / 2])
+    node.left.parent = node
+    build_from_sorted(array, node.left)
+  end
+
+  def build_right(array, node)
+    return if array.empty?
+
+    node.right = Node.new(array[array.size / 2])
+    node.right.parent = node
+    build_from_sorted(array, node.right)
   end
 
   def build_from_unsorted(array)
     @root.value = array.shift
     array.each { |n| @root.insert(n) }
-
     @root
   end
 end
