@@ -4,10 +4,7 @@ class Node
   attr_accessor :value, :parent, :left, :right
 
   def initialize(value = nil)
-    @value  = value
-    @parent = nil
-    @left   = nil
-    @right  = nil
+    @value = value
   end
 
   def insert(value)
@@ -42,7 +39,6 @@ class Node
     stack   = [self]
     visited = []
 
-    # Using preorder traversal.
     until stack.empty?
       node = stack.pop
       return node if node.value == value
@@ -96,7 +92,6 @@ class Tree
     @root = Node.new
   end
 
-  # Take an array of data and turn it into a binary tree.
   def build(array)
     array == array.sort ? build_from_sorted(array) : build_from_unsorted(array)
   end
