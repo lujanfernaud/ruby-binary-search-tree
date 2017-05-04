@@ -17,12 +17,11 @@ class Node
   end
 
   def breadth_first_search(value)
-    return self   if @value == value
-    return @left  if @left.value == value
-    return @right if @right.value == value
+    return self if @value == value
 
     queue = []
-    queue << @left << @right
+    queue << @left  if @left
+    queue << @right if @right
 
     until queue.empty?
       node = queue.shift
@@ -93,7 +92,11 @@ class Tree
   end
 
   def build(array)
-    array == array.sort ? build_from_sorted(array) : build_from_unsorted(array)
+    if array == array.sort
+      build_from_sorted(array.uniq)
+    else
+      build_from_unsorted(array)
+    end
   end
 
   def breadth_first_search(value)
@@ -147,30 +150,54 @@ class Tree
   end
 end
 
-data1 = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+data1 = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
+data2 = [86, 32, 20, 18, 90, 52, 37, 66, 88, 26, 58, 94, 5, 54, 15, 89, 90, 34]
 
 tree1 = Tree.new
+tree2 = Tree.new
 
-puts "\n-----------"
-puts "Build tree:"
-puts "#{data1}"
-puts "-----------\n"
+puts "\n---------------------"
+puts "Build tree (unsorted)"
+puts "---------------------\n"
+puts "Array: #{data1}\n\n"
 p tree1.build(data1)
 
-puts "\n-----------"
-puts "Breadth First Search (using queue):"
-puts "#{data1}"
-puts "-----------\n"
-p tree1.breadth_first_search(6)
+puts "\n-------------------"
+puts "Build tree (sorted)"
+puts "-------------------\n"
+puts "Array: #{data1.sort}\n\n"
+p tree1.build(data1.sort)
 
-puts "\n-----------"
-puts "Depth First Search (using stack):"
-puts "#{data1}"
-puts "-----------\n"
-p tree1.depth_first_search(3)
+puts "\n--------------------------------------"
+puts "Breadth First Search (adding to queue)"
+puts "--------------------------------------\n"
+value = data1.sample
+puts "Value to find: #{value}\n\n"
+p tree1.breadth_first_search(value)
 
-puts "\n-----------"
-puts "Depth First Search (recursive):"
-puts "#{data1}"
-puts "-----------\n"
-p tree1.dfs_recursive(6)
+puts "\n------------------------------------"
+puts "Depth First Search (adding to queue)"
+puts "------------------------------------\n"
+value = data1.sample
+puts "Value to find: #{value}\n\n"
+p tree1.depth_first_search(value)
+
+puts "\n------------------------------"
+puts "Depth First Search (recursive)"
+puts "------------------------------\n"
+value = data1.sample
+puts "Value to find: #{value}\n\n"
+p tree1.dfs_recursive(value)
+
+puts "\n-----------------"
+puts "Build bigger tree"
+puts "-----------------\n"
+puts "Array: #{data2}\n\n"
+p tree2.build(data2)
+
+puts "\n------------------------------"
+puts "Depth First Search (recursive)"
+puts "------------------------------\n"
+value = data2.sample
+puts "Value to find: #{value}\n\n"
+p tree2.dfs_recursive(value)
