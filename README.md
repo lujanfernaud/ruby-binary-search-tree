@@ -1,8 +1,8 @@
-# Ruby Binary Tree
+# Ruby Binary Search Tree
 
 Binary Search Tree in Ruby for [The Odin Project](https://www.theodinproject.com/courses/ruby-programming/lessons/data-structures-and-algorithms).
 
-It may be run with `ruby binary_tree.rb`
+It may be run with `ruby binary_search_tree.rb`
 
 ## Task Instructions
 
