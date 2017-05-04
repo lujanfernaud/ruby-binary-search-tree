@@ -27,9 +27,10 @@ class Node
     queue = []
     queue << @left << @right
 
-    queue.each do |node|
-      return node.left  if node.left && node.left.value == value
-      return node.right if node.right && node.right.value == value
+    until queue.empty?
+      node = queue.shift
+      return node if node.value == value
+
       queue << node.left if node.left
       queue << node.right if node.right
     end
